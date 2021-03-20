@@ -21,4 +21,10 @@ body {
 
 .buttons {
     padding: 10px 10px 10px 0;
+	display: none;
+}
+
+.timer {
+	text-align: center;
+	font-size: 50px;
 }

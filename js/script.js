@@ -14,6 +14,9 @@ let index = 0;
 let points = 0;
 let gamesCount = 0;
 
+let timer = document.getElementById('timer');
+let timeLeft = 10;
+
 let results = document.querySelector('.results');
 let userScorePoint = document.querySelector('.userScorePoint');
 let averageScore = document.querySelector('.average');
@@ -25,13 +28,15 @@ fetch('https://quiztai.herokuapp.com/api/quiz')
     	.then(resp => resp.json())
     	.then(resp => {
         	   preQuestions = resp;
-			   
+
 			   setQuestion(index);
     	});
+		
+myVar = window.setInterval(countdown, 1000);
 
 function setQuestion(index) {
 	question.innerHTML = preQuestions[index].question;
-	
+
    if (preQuestions[index].answers.length === 2) {
        answers[2].style.display = 'none';
        answers[3].style.display = 'none';
@@ -39,12 +44,13 @@ function setQuestion(index) {
        answers[2].style.display = 'block';
        answers[3].style.display = 'block';
    }
-	
+
 	answers[0].innerHTML = preQuestions[index].answers[0];
 	answers[1].innerHTML = preQuestions[index].answers[1];
 	answers[2].innerHTML = preQuestions[index].answers[2];
 	answers[3].innerHTML = preQuestions[index].answers[3];
 
+	questionNumber.innerHTML = index+1;
 	activateAnswers();
 	cleanAnswers();
 }
@@ -92,7 +98,8 @@ function markInCorrect(elem){
 
 restart.addEventListener('click', function (event) {
 	console.log('RESTART button clicked');
-	
+	myVar = window.setInterval(countdown, 1000);
+
     event.preventDefault();
 
     index = 0;
@@ -100,9 +107,7 @@ restart.addEventListener('click', function (event) {
     let userScorePoint = document.querySelector('.score');
     userScorePoint.innerHTML = points;
     setQuestion(index);
-    activateAnswers();
-	
-	
+
 	list.style.display = 'block';
     results.style.display = 'none';
 });
@@ -111,16 +116,17 @@ next.addEventListener('click', function () {
 	console.log('NEXT button clicked');
 	index++;
 	if (index >= preQuestions.length){
+		clearInterval(myVar);
 		list.style.display = 'none';
 		results.style.display = 'block';
 		userScorePoint.innerHTML = points;
 		let gamesCount = localStorage.getItem('gamesCount');
 		let average;
-		
+
 		if (gamesCount != null){
 			average = localStorage.getItem('average');
 			average = (average * gamesCount + points) / ++gamesCount;
-			//gamesCount++;
+			average = average.toFixed(2);
 		}else{
 			gamesCount = 1;
 			average = points;
@@ -130,7 +136,6 @@ next.addEventListener('click', function () {
 		averageScore.innerHTML = average;
 	} else{
 		setQuestion(index);
-		questionNumber.innerHTML = index+1;
 	}
 });
 
@@ -139,12 +144,15 @@ previous.addEventListener('click', function () {
 	if(index > 0){
 		index--;
 		setQuestion(index);
-		questionNumber.innerHTML = index+1;
 	}
 });
-		
-	localStorage.removeItem('average');
-	localStorage.removeItem('gamesCount');
-			
-			
-			
+
+function countdown(){
+	timeLeft--;
+	
+	if(timeLeft < 0){
+		next.click();
+		timeLeft = 10;
+	}
+	timer.innerText = timeLeft;
+}
