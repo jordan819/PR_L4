@@ -143,8 +143,6 @@ previous.addEventListener('click', function () {
 	}
 });
 		
-	localStorage.removeItem('average');
-	localStorage.removeItem('gamesCount');
+
 			
-			
-			
+	
