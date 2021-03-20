@@ -112,8 +112,8 @@ restart.addEventListener('click', function (event) {
     results.style.display = 'none';
 });
 
-next.addEventListener('click', function () {
-	console.log('NEXT button clicked');
+function nextQuestion() {
+	console.log('NEXT question');
 	index++;
 	if (index >= preQuestions.length){
 		clearInterval(myVar);
@@ -137,21 +137,13 @@ next.addEventListener('click', function () {
 	} else{
 		setQuestion(index);
 	}
-});
-
-previous.addEventListener('click', function () {
-	console.log('PREVIOUS button clicked');
-	if(index > 0){
-		index--;
-		setQuestion(index);
-	}
-});
+}
 
 function countdown(){
 	timeLeft--;
 	
 	if(timeLeft < 0){
-		next.click();
+		nextQuestion();
 		timeLeft = 10;
 	}
 	timer.innerText = timeLeft;
