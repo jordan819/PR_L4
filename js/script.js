@@ -16,7 +16,6 @@ let gamesCount = 0;
 
 let timer = document.getElementById('timer');
 let timerClass = document.querySelector('.timer');
-let timeLeft = 10;
 let elem = document.getElementById("myBar");
 let progressBar;
 let myProgress = document.getElementById("myProgress");
@@ -25,6 +24,7 @@ let results = document.querySelector('.results');
 let userScorePoint = document.querySelector('.userScorePoint');
 let averageScore = document.querySelector('.average');
 
+let show_report = document.querySelector('.show-report');
 let report = document.querySelector('.report');
 let report_question = document.querySelectorAll('.report-question');
 let report_answers_group = document.querySelectorAll('.report-list-group');
@@ -121,7 +121,6 @@ function markInCorrect(elem){
 
 restart.addEventListener('click', function (event) {
 	console.log('RESTART button clicked');
-	//myVar = window.setInterval(countdown, 1000);
 
     event.preventDefault();
 
@@ -136,6 +135,7 @@ restart.addEventListener('click', function (event) {
 	timerClass.style.display = 'block';
 	myProgress.style.display = 'block';
     results.style.display = 'none';
+    report.style.display = 'none';
 });
 
 function nextQuestion() {
@@ -151,7 +151,6 @@ function nextQuestion() {
 		userScorePoint.innerHTML = points;
 		let gamesCount = localStorage.getItem('gamesCount');
 		let average;
-
 
 
         for(let i=0; i<report_answers_group.length; i++){
@@ -188,8 +187,6 @@ function nextQuestion() {
 
             }
         }
-
-
 
 
 		if (gamesCount != null){
@@ -233,6 +230,9 @@ function move() {
     }
 }
 
-function showReport(){
-	
-}
+show_report.addEventListener('click', function (event) {
+	console.log('SHOW REPORT button clicked');
+
+    event.preventDefault();
+    report.style.display = 'block';
+});

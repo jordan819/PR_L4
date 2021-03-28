@@ -15,11 +15,10 @@ body {
 }
 
 .list-group-item:not(.no-hover):hover {
-	opacity: 0.6;
+    background-color: #aaadab;
 }
 
 .report-list-group-item {
-    cursor: pointer;
 	border: solid;
 	margin: 2px;
 	display: block;
@@ -53,5 +52,5 @@ body {
 #myBar {
   width: 100%;
   height: 30px;
-  background-color: #16b819;
+  background-color: #289a27;
 }
