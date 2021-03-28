@@ -10,19 +10,22 @@ let list = document.querySelector('.list');
 
 let pointsElem = document.querySelector('.score');
 let restart = document.querySelector('.restart');
-let index = 0;
+let index = 18;
 let points = 0;
 let gamesCount = 0;
 
 let timer = document.getElementById('timer');
+let timerClass = document.querySelector('.timer');
 let timeLeft = 10;
+let elem = document.getElementById("myBar");
+let progressBar;
 
 let results = document.querySelector('.results');
 let userScorePoint = document.querySelector('.userScorePoint');
 let averageScore = document.querySelector('.average');
 
-
-questionNumber.innerHTML = index+1;
+let report = document.querySelector('.report');
+let usersAnswers = [];
 
 fetch('https://quiztai.herokuapp.com/api/quiz')
     	.then(resp => resp.json())
@@ -32,7 +35,7 @@ fetch('https://quiztai.herokuapp.com/api/quiz')
 			   setQuestion(index);
     	});
 		
-myVar = window.setInterval(countdown, 1000);
+//myVar = window.setInterval(countdown, 1000);
 
 function setQuestion(index) {
 	question.innerHTML = preQuestions[index].question;
@@ -53,6 +56,16 @@ function setQuestion(index) {
 	questionNumber.innerHTML = index+1;
 	activateAnswers();
 	cleanAnswers();
+	timeLeft = 10;
+	
+	move();
+	
+	countdown();
+	timeLeft--;
+	myVar = window.setInterval(function (){
+		countdown();
+		timeLeft--;
+	}, 1000);
 }
 
 function activateAnswers(){
@@ -64,6 +77,7 @@ function activateAnswers(){
 function disableAnswers(){
 	for (let i=0; i<answers.length; i++){
 		answers[i].removeEventListener('click', doAction);
+		answers[i].classList.add('no-hover');
 	}
 }
 
@@ -71,12 +85,14 @@ function cleanAnswers(){
 	for (let i=0; i<answers.length; i++){
 		answers[i].classList.remove('correct');
 		answers[i].classList.remove('incorrect');
+		answers[i].classList.remove('no-hover');
 	}
 }
 
 function doAction(event) {
     //event.target - Zwraca referencję do elementu, do którego zdarzenie zostało pierwotnie wysłane.
     if (event.target.innerHTML === preQuestions[index].correct_answer) {
+		usersAnswers[index] = event.target.innerHTML;
         points++;
         pointsElem.innerText = points;
         markCorrect(event.target);
@@ -84,7 +100,12 @@ function doAction(event) {
     else {
         markInCorrect(event.target);
     }
+	
     disableAnswers();
+	
+	clearInterval(myVar);
+	clearInterval(progressBar);
+	setTimeout(nextQuestion, 1000);
 }
 
 function markCorrect(elem){
@@ -92,13 +113,13 @@ function markCorrect(elem){
 }
 
 function markInCorrect(elem){
-	elem.classList.add('incorrect')
+	elem.classList.add('incorrect');
 }
 
 
 restart.addEventListener('click', function (event) {
 	console.log('RESTART button clicked');
-	myVar = window.setInterval(countdown, 1000);
+	//myVar = window.setInterval(countdown, 1000);
 
     event.preventDefault();
 
@@ -109,15 +130,19 @@ restart.addEventListener('click', function (event) {
     setQuestion(index);
 
 	list.style.display = 'block';
+	timer.style.display = 'block';
+	timerClass.style.display = 'block';
     results.style.display = 'none';
 });
 
 function nextQuestion() {
 	console.log('NEXT question');
+	clearInterval(myVar);
 	index++;
 	if (index >= preQuestions.length){
-		clearInterval(myVar);
 		list.style.display = 'none';
+		timer.style.display = 'none';
+		timerClass.style.display = 'none';
 		results.style.display = 'block';
 		userScorePoint.innerHTML = points;
 		let gamesCount = localStorage.getItem('gamesCount');
@@ -140,11 +165,30 @@ function nextQuestion() {
 }
 
 function countdown(){
-	timeLeft--;
 	
 	if(timeLeft < 0){
 		nextQuestion();
 		timeLeft = 10;
 	}
 	timer.innerText = timeLeft;
+}
+
+
+
+
+function move() {
+    var width = 100;
+    progressBar = setInterval(frame, 10);
+    function frame() {
+      if (width <= 0) {
+        clearInterval(progressBar);
+      } else {
+        width-=0.1;
+        elem.style.width = (timeLeft+1)*10 + "%";
+      }
+    }
+}
+
+function showReport(){
+	
 }
