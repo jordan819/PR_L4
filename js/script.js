@@ -10,7 +10,7 @@ let list = document.querySelector('.list');
 
 let pointsElem = document.querySelector('.score');
 let restart = document.querySelector('.restart');
-let index = 18;
+let index = 0;
 let points = 0;
 let gamesCount = 0;
 
@@ -27,7 +27,6 @@ let averageScore = document.querySelector('.average');
 
 let report = document.querySelector('.report');
 let report_question = document.querySelectorAll('.report-question');
-let report_answers = document.querySelectorAll('.report-list-group-item');
 let report_answers_group = document.querySelectorAll('.report-list-group');
 
 let usersAnswers = [];
