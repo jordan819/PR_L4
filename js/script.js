@@ -19,12 +19,17 @@ let timerClass = document.querySelector('.timer');
 let timeLeft = 10;
 let elem = document.getElementById("myBar");
 let progressBar;
+let myProgress = document.getElementById("myProgress");
 
 let results = document.querySelector('.results');
 let userScorePoint = document.querySelector('.userScorePoint');
 let averageScore = document.querySelector('.average');
 
 let report = document.querySelector('.report');
+let report_question = document.querySelectorAll('.report-question');
+let report_answers = document.querySelectorAll('.report-list-group-item');
+let report_answers_group = document.querySelectorAll('.report-list-group');
+
 let usersAnswers = [];
 
 fetch('https://quiztai.herokuapp.com/api/quiz')
@@ -34,8 +39,6 @@ fetch('https://quiztai.herokuapp.com/api/quiz')
 
 			   setQuestion(index);
     	});
-		
-//myVar = window.setInterval(countdown, 1000);
 
 function setQuestion(index) {
 	question.innerHTML = preQuestions[index].question;
@@ -91,8 +94,8 @@ function cleanAnswers(){
 
 function doAction(event) {
     //event.target - Zwraca referencję do elementu, do którego zdarzenie zostało pierwotnie wysłane.
+    usersAnswers[index] = event.target.innerHTML;
     if (event.target.innerHTML === preQuestions[index].correct_answer) {
-		usersAnswers[index] = event.target.innerHTML;
         points++;
         pointsElem.innerText = points;
         markCorrect(event.target);
@@ -132,6 +135,7 @@ restart.addEventListener('click', function (event) {
 	list.style.display = 'block';
 	timer.style.display = 'block';
 	timerClass.style.display = 'block';
+	myProgress.style.display = 'block';
     results.style.display = 'none';
 });
 
@@ -141,12 +145,53 @@ function nextQuestion() {
 	index++;
 	if (index >= preQuestions.length){
 		list.style.display = 'none';
+		myProgress.style.display = 'none';
 		timer.style.display = 'none';
 		timerClass.style.display = 'none';
 		results.style.display = 'block';
 		userScorePoint.innerHTML = points;
 		let gamesCount = localStorage.getItem('gamesCount');
 		let average;
+
+
+
+        for(let i=0; i<report_answers_group.length; i++){
+
+            report_question[i].innerHTML = preQuestions[i].question;
+
+            for(let j=0; j<report_answers_group[i].childElementCount; j++){
+
+               if (preQuestions[i].answers.length === 2) {
+                   report_answers_group[i].children[2].style.display = 'none';
+                   report_answers_group[i].children[3].style.display = 'none';
+               } else {
+                   report_answers_group[i].children[2].style.display = 'block';
+                   report_answers_group[i].children[3].style.display = 'block';
+               }
+
+                report_answers_group[i].children[j].innerHTML = preQuestions[i].answers[j];
+
+
+                if(usersAnswers[i] === report_answers_group[i].children[j].innerHTML){
+                    if(usersAnswers[i] === preQuestions[i].correct_answer){
+                        report_answers_group[i].children[j].classList.add('correct');
+                        console.log(i + ' ' + j + ' correct');
+                    }
+                    else{
+                        report_answers_group[i].children[j].classList.add('incorrect');
+                        console.log(i + ' ' + j + ' incorrect');
+                    }
+                }
+                else if(report_answers_group[i].children[j].innerHTML === preQuestions[i].correct_answer){
+                    report_answers_group[i].children[j].classList.add('correct');
+                    console.log(i + ' ' + j + ' correct');
+                }
+
+            }
+        }
+
+
+
 
 		if (gamesCount != null){
 			average = localStorage.getItem('average');

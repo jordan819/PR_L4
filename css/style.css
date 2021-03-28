@@ -18,6 +18,13 @@ body {
 	opacity: 0.6;
 }
 
+.report-list-group-item {
+    cursor: pointer;
+	border: solid;
+	margin: 2px;
+	display: block;
+}
+
 .correct {
     background-color: #289a27;
 }
