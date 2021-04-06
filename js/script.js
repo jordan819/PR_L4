@@ -58,7 +58,7 @@ function setQuestion(index) {
 	questionNumber.innerHTML = index+1;
 	activateAnswers();
 	cleanAnswers();
-	timeLeft = 10;
+	timeLeft = 20;
 	
 	move();
 	
@@ -152,7 +152,6 @@ function nextQuestion() {
 		let gamesCount = localStorage.getItem('gamesCount');
 		let average;
 
-
         for(let i=0; i<report_answers_group.length; i++){
 
             report_question[i].innerHTML = preQuestions[i].question;
@@ -209,23 +208,20 @@ function countdown(){
 	
 	if(timeLeft < 0){
 		nextQuestion();
-		timeLeft = 10;
+		timeLeft = 20;
 	}
 	timer.innerText = timeLeft;
 }
 
-
-
-
 function move() {
-    var width = 100;
     progressBar = setInterval(frame, 10);
     function frame() {
-      if (width <= 0) {
+      if (timeLeft < 0) {
+        elem.style.width = "0%";
         clearInterval(progressBar);
       } else {
-        width-=0.1;
-        elem.style.width = (timeLeft+1)*10 + "%";
+        elem.style.width = (timeLeft+1)*5 + "%";
+        console.log(elem.style.width);
       }
     }
 }
